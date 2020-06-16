@@ -7,8 +7,19 @@ import servo as srv
 import status
 import json
 import requests
+import pyrebase
+
+import time
 
 srv.setup()
+#cfgfire.setup()
+config = {
+        "apiKey" : "AIzaSyBvtK_grzpMJFPd6HVhNVqLA9zf1xMYBGs",
+        "authDomain" : "ibrebesf.firebaseapp.com",
+        "databaseURL" : "https://ibrebesf.firebaseio.com/",
+        "storageBucket" : "ibrebesf.appspot.com"}
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
 try :
     
@@ -23,12 +34,33 @@ try :
         ults1 = 40 - ultra1
         ults2 = 40 - ultra2
         
-        print "sensor 1", ults1
-        print "sensor 2", ults2
+        fults1 = '{:.3}'.format(ults1)
+        fults2 = '{:.3}'.format(ults2)
         
-        #hasil status 1,2,3 (Aman,Normal,Bahaya)
         stul1 =  status.fstatus(ults1,16,27)
         stul2 =  status.fstatus(ults2,16,27)
+        
+        #update data firebase
+        data = {
+            "Raspi3/Sungai/":{
+                "Ketinggian": fults2,
+                "Status": stul2},
+            "Raspi3/Debit": {
+                "Ketinggian": fults1,
+                "Status": stul1}
+            }
+        db.update(data)
+        
+        
+        
+        
+
+        print (fults1, stul1)
+        print (fults2, stul2)
+        
+        
+      
+        
         
         
         #mengatur otomatis pintu servo
@@ -52,8 +84,10 @@ try :
         #updebitt = requests.put('https://webibf.herokuapp.com/api/debittumpah/1', debittumpah)
             
         #insert report
-        #report = {'sungai' : utls2, 'debitumpha' : utls1}
-        #inreport = requests.post('https://webibf.herokuapp.com/api/report/create', json=report)
+        report = {'sungai' : ults2, 'debitumpah' : ults1}
+        inreport = requests.post('https://webibf.herokuapp.com/api/report/create', json=report)
+        print("berhasil")
+        time.sleep(0.00009)
         
     
     

@@ -3,16 +3,16 @@
 def fstatus (s,x,y):
     
     #x=16 y=27
-    if (s > x and s <= y):
-        hasil = 2
+    if (s > x and s < y):
+        hasil = "Siaga"
         return hasil
         #return normal
     elif (s > y):
-        hasil = 3
+        hasil = "Bahaya"
         return hasil
         #return Bahaya
     elif (s < x):
-        hasil = 1
+        hasil = "Aman"
         return hasil
         #print ("Aman")
         #return Aman
