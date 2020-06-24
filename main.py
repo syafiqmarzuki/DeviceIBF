@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-
+import tweepy
 import sensor1
 import sensor2
 import servo as srv
@@ -21,6 +21,12 @@ config = {
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
+#twitter
+
+auth = tweepy.OAuthHandler("8ZttJWOCRWYFc98DDBtK2K1xA", "f3z8UiSpqRklN2BkXubOd5yg6qZqZXC0zRugRALb8IWXEMpMrq")
+auth.set_access_token("1253167579650158593-6c7cZ1o0bfIILvblMwy8rpR38O0UFK", "0fHrd7ILuK5iJWIMApr0NkFi4Rzkn6w7vpnmi27xI4YBz")
+
+# Create a tweet
 try :
     
     while True:
@@ -40,6 +46,18 @@ try :
         stul1 =  status.fstatus(ults1,16,27)
         stul2 =  status.fstatus(ults2,16,27)
         
+        
+       # Create API object
+        api = tweepy.API(auth)
+        
+        if (ults1 > 29):
+            pesan = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fults1)+" cm . Harap untuk bersiap siap menyelamatkan diri."
+            api.update_status(pesan)
+            
+        if (ults2 > 29):
+            pesan2 = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Harap untuk bersiap siap menyelamatkan diri."
+            api.update_status(pesan2)
+        
         #update data firebase
         data = {
             "Raspi3/Sungai/":{
@@ -52,15 +70,8 @@ try :
         db.update(data)
         
         
-        
-        
-
         print (fults1, stul1)
-        print (fults2, stul2)
-        
-        
-      
-        
+        print (fults2, stul2)   
         
         
         #mengatur otomatis pintu servo
