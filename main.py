@@ -8,9 +8,11 @@ import status
 import json
 import requests
 import pyrebase
+import timeit
+from datetime import datetime
 
-import time
 
+start = timeit.default_timer()
 srv.setup()
 #cfgfire.setup()
 config = {
@@ -26,11 +28,14 @@ db = firebase.database()
 auth = tweepy.OAuthHandler("8ZttJWOCRWYFc98DDBtK2K1xA", "f3z8UiSpqRklN2BkXubOd5yg6qZqZXC0zRugRALb8IWXEMpMrq")
 auth.set_access_token("1253167579650158593-6c7cZ1o0bfIILvblMwy8rpR38O0UFK", "0fHrd7ILuK5iJWIMApr0NkFi4Rzkn6w7vpnmi27xI4YBz")
 
+saat_ini = datetime.now()
+tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
+jam = saat_ini.strftime('%H:%M:%S')
+
 # Create a tweet
-try :
     
-    while True:
-        
+while True:
+    try:
         ultra1 = sensor1.ping(5,6)
         ultra2 = sensor2.ping(24,23)
         
@@ -51,14 +56,16 @@ try :
         api = tweepy.API(auth)
         
         if (ults1 > 29):
-            pesan = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fults1)+" cm . Harap untuk bersiap siap menyelamatkan diri."
+            
+            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fults1)+" cm . Harap untuk bersiap siap menyelamatkan diri."
             api.update_status(pesan)
+            print('post twitter debit')
             
         if (ults2 > 29):
-            pesan2 = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Harap untuk bersiap siap menyelamatkan diri."
-            api.update_status(pesan2)
+            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Harap untuk bersiap siap menyelamatkan diri."
+            api.update_status(pesan)
+            print ('post twitter sungai')
         
-        #update data firebase
         data = {
             "Raspi3/Sungai/":{
                 "Ketinggian": fults2,
@@ -68,21 +75,30 @@ try :
                 "Status": stul1}
             }
         db.update(data)
+            
+        time.sleep(1)
+        now = timeit.default_timer()
+        if int(now - start) % 1800 == 0:
+            report = {'sungai' : ults2, 'debitumpah' : ults1}
+            inreport = requests.post('https://webibf.herokuapp.com/api/report/create', json=report)
+            print("berhasil")
         
         
-        print (fults1, stul1)
-        print (fults2, stul2)   
+        
+        
+        #print (fults1, stul1)
+        #print (fults2, stul2)   
         
         
         #mengatur otomatis pintu servo
         if (ults1 > 25):
-            print ("Banjir Kiriman Buka")
+            #print ("Banjir Kiriman Buka")
             srv.ServoUp()
         elif (ults2 <= 25 ):
-            print ("Pintu Buka Terus")
+            #print ("Pintu Buka Terus")
             srv.ServoUp()
         elif (ults2 >= 25):
-            print ("Tutup Pintu")
+            #print ("Tutup Pintu")
             srv.ServoDown()
             
         
@@ -95,14 +111,12 @@ try :
         #updebitt = requests.put('https://webibf.herokuapp.com/api/debittumpah/1', debittumpah)
             
         #insert report
-        report = {'sungai' : ults2, 'debitumpah' : ults1}
-        inreport = requests.post('https://webibf.herokuapp.com/api/report/create', json=report)
-        print("berhasil")
-        time.sleep(0.00009)
         
+
+    except Exception as e:
+        print('Duplicate tweet. Tidak Bisa post....')
+        pass
+        #srv.close()
+        #GPIO.cleanup()
+                
     
-    
-except KeyboardInterrupt:
-    print('Stop')
-    srv.close()
-    GPIO.cleanup()
