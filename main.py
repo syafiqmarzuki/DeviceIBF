@@ -32,18 +32,22 @@ saat_ini = datetime.now()
 tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
 jam = saat_ini.strftime('%H:%M:%S')
 
+
 # Create a tweet
     
 while True:
     try:
+        
         ultra1 = sensor1.ping(5,6)
         ultra2 = sensor2.ping(24,23)
-        
         #untuk mengukur ketinggian air
         #ults1 = pintu air / debit tumpah
         #ults2 = air masuk / sungai
-        ults1 = 40 - ultra1
-        ults2 = 40 - ultra2
+        ults1 = 36 - ultra1
+        ults2 = 36 - ultra2
+        
+        print(ults1);
+        print(ults2);
         
         fults1 = '{:.3}'.format(ults1)
         fults2 = '{:.3}'.format(ults2)
