@@ -32,6 +32,14 @@ saat_ini = datetime.now()
 tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
 jam = saat_ini.strftime('%H:%M:%S')
 
+#fcm
+headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAa_ji2rI:APA91bFwwWcFsZaupSeZyZghKbN32x3Vp9QlKtHOpHfjY0Bo9Q1XeQTp_oN_c9NnUzsf3F3OpJ7oXsqsKQNbVBm4HXnwKwElhHPk2lBQ4h-Vjy_TljfCo1NKBZxukLGDeXPvHNt3JCks'
+      }
+
+
+
 
 # Create a tweet
     
@@ -46,8 +54,8 @@ while True:
         ults1 = 36 - ultra1
         ults2 = 36 - ultra2
         
-        print(ults1);
-        print(ults2);
+        print('debit tumpah' , ults1);
+        print('sungai' ,  ults2);
         
         fults1 = '{:.3}'.format(ults1)
         fults2 = '{:.3}'.format(ults2)
@@ -84,10 +92,28 @@ while True:
         now = timeit.default_timer()
         if int(now - start) % 1800 == 0:
             report = {'sungai' : ults2, 'debitumpah' : ults1}
-            inreport = requests.post('https://webibf.herokuapp.com/api/report/create', json=report)
-            print("berhasil")
+            inreport = requests.post('https://ibflood.herokuapp.com/api/report/create', json=report)
+            print("berhasil post db")
         
         
+        if (ults1 > 30 or ults2 > 30):
+            
+            body = {
+                'notification': {
+                    'title': 'Kondisi Bahaya',
+                    'body': 'Harap Menyelamatkan Diri'},     
+                'to':
+                    '/topics/Notif-Bahaya',
+                    'priority': 'high',
+                'data': {
+                    'sungai': ults1,
+                    'debit': ults2 },
+                    }
+            response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
+            print(response.status_code)
+            print(response.json())
+
+                
         
         
         #print (fults1, stul1)
@@ -105,16 +131,6 @@ while True:
             #print ("Tutup Pintu")
             srv.ServoDown()
             
-        
-        #update data sungai
-        #sungai = {'ketinggian' : ults1 , 'status' : stul2}
-        #upsungai = requests.put('https://webibf.herokuapp.com/api/sungai/1', sungai)
-        
-        #update data debittumpah
-        #debittumpah = {'ketinggian' : ults2 , 'status' : stul1}
-        #updebitt = requests.put('https://webibf.herokuapp.com/api/debittumpah/1', debittumpah)
-            
-        #insert report
         
 
     except Exception as e:
