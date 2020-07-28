@@ -48,12 +48,11 @@ while True:
         
         ultra1 = sensor1.ping(5,6)
         ultra2 = sensor2.ping(24,23)
-        #untuk mengukur ketinggian air
-        #ults1 = pintu air / debit tumpah
-        #ults2 = air masuk / sungai
-        ults1 = 36 - ultra1
-        ults2 = 36 - ultra2
-        
+       
+        ults1 = 22 - ultra1
+        ults2 = 37 - ultra2
+        print(ults1);
+        print(ults2);
         print('debit tumpah' , ults1);
         print('sungai' ,  ults2);
         
@@ -91,12 +90,12 @@ while True:
         time.sleep(1)
         now = timeit.default_timer()
         if int(now - start) % 1800 == 0:
-            report = {'sungai' : ults2, 'debitumpah' : ults1}
+            report = {'sungai' : fults2, 'debittumpah' : fults1}
             inreport = requests.post('https://ibflood.herokuapp.com/api/report/create', json=report)
             print("berhasil post db")
         
         
-        if (ults1 > 30 or ults2 > 30):
+        if (ults1 > 30 and ults2 > 30):
             
             body = {
                 'notification': {
@@ -106,12 +105,17 @@ while True:
                     '/topics/Notif-Bahaya',
                     'priority': 'high',
                 'data': {
-                    'sungai': ults1,
-                    'debit': ults2 },
+                    'sungai': fults1,
+                    'debit': fults2 },
                     }
             response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
             print(response.status_code)
             print(response.json())
+            notif_isi = "Harap untuk menyelamatkan diri anda karena situasi sudah bahaya ketinggian bendungan sudah mencapai" +(strfults1)+ "cm  dan sungai "+str(fults2)+ "cm ."
+            notif = {'isi_notif' : notif_isi}
+            inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
+            print("berhasil post notif")
+            
 
                 
         
