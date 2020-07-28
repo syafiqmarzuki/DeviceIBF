@@ -100,7 +100,8 @@ while True:
             body = {
                 'notification': {
                     'title': 'Kondisi Bahaya',
-                    'body': 'Harap Menyelamatkan Diri'},     
+                    'body': 'Harap Menyelamatkan Diri',
+                    'sound' : 'default'},     
                 'to':
                     '/topics/Notif-Bahaya',
                     'priority': 'high',
@@ -111,7 +112,7 @@ while True:
             response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
             print(response.status_code)
             print(response.json())
-            notif_isi = "Harap untuk menyelamatkan diri anda karena situasi sudah bahaya ketinggian bendungan sudah mencapai" +(strfults1)+ "cm  dan sungai "+str(fults2)+ "cm ."
+            notif_isi = "Harap untuk menyelamatkan diri anda karena situasi sudah bahaya ketinggian bendungan sudah mencapai" +str(fults1)+ "cm  dan sungai "+str(fults2)+ "cm ."
             notif = {'isi_notif' : notif_isi}
             inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
             print("berhasil post notif")
