@@ -5,8 +5,8 @@ import time                                #Import time library
 GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering 
 GPIO.setwarnings(False)
 
-TRIG = 23
-ECHO = 24
+TRIG = 24
+ECHO = 23
 
 GPIO.setup(TRIG,GPIO.OUT)                  #Set pin as GPIO out
 GPIO.setup(ECHO,GPIO.IN)
@@ -39,6 +39,7 @@ def ping(echo, trig):
     distance = round(distance, 2)
     
     return distance
+
 
 
 

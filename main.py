@@ -11,15 +11,14 @@ import pyrebase
 import timeit
 from datetime import datetime
 
-
 start = timeit.default_timer()
 srv.setup()
 #cfgfire.setup()
 config = {
         "apiKey" : "AIzaSyBvtK_grzpMJFPd6HVhNVqLA9zf1xMYBGs",
-        "authDomain" : "ibrebesf.firebaseapp.com",
-        "databaseURL" : "https://ibrebesf.firebaseio.com/",
-        "storageBucket" : "ibrebesf.appspot.com"}
+        "authDomain" : "ibflood.firebaseapp.com",
+        "databaseURL" : "https://ibflood.firebaseio.com/",
+        "storageBucket" : "ibflood.appspot.com"}
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
@@ -47,11 +46,11 @@ while True:
     try:
         
         ultra1 = sensor1.ping(5,6)
-        ultra2 = sensor2.ping(24,23)
+        ultra2 = sensor2.ping(23,24)
        
         ults1 = 38 - ultra1
         ults2 = 38 - ultra2
-        print(ults1);
+        #print(ults1);
         print(ults2);
         print('debit tumpah' , ults1);
         print('sungai' ,  ults2);
@@ -100,7 +99,7 @@ while True:
             notif = {'isi_notif' : notif_isi}
             inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
             print("berhasil post notif")
-            #print('post twitter debit')
+#             #print('post twitter debit')
             
         if (ults2 > 26):
             pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
@@ -126,45 +125,17 @@ while True:
             print("berhasil post notif")
             
             print ('post twitter sungai')
-        
-        
-            
+#         
+#         
+#             
         time.sleep(1)
         now = timeit.default_timer()
         if int(now - start) % 1800 == 0:
             report = {'sungai' : fults2, 'debittumpah' : fults1}
             inreport = requests.post('https://ibflood.herokuapp.com/api/report/create', json=report)
             print("berhasil post db")
-        
-        
-        #if (ults1 > 30 and ults2 > 30):
-            
-            #body = {
-                #'notification': {
-                    #'title': 'Kondisi Bahaya',
-                    #'body': 'Harap Menyelamatkan Diri',
-                   # 'sound' : 'default'},     
-                #'to':
-                 #   '/topics/Notif-Bahaya',
-                  #  'priority': 'high',
-                #'data': {
-                    #'sungai': fults1,
-                    #'debit': fults2 },
-                    #}
-            #response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
-            #print(response.status_code)
-            #print(response.json())
-            #notif_isi = "Harap untuk menyelamatkan diri anda karena situasi sudah bahaya ketinggian bendungan sudah mencapai" +str(fults1)+ "cm  dan sungai "+str(fults2)+ "cm ."
-            #notif = {'isi_notif' : notif_isi}
-            #inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
-            #print("berhasil post notif")
-            
-
-                
-        
-        
-        #print (fults1, stul1)
-        #print (fults2, stul2)   
+#         
+#         
         
         
         #mengatur otomatis pintu servo
