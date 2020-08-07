@@ -30,12 +30,28 @@ auth.set_access_token("1253167579650158593-6c7cZ1o0bfIILvblMwy8rpR38O0UFK", "0fH
 saat_ini = datetime.now()
 tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
 jam = saat_ini.strftime('%H:%M:%S')
+url = "https://api.wassenger.com/v1/messages"
+url_get_phone = "https://ibflood.herokuapp.com/api/nohp"
+response = requests.get(url = url_get_phone)
+body = json.loads(str(response.text))
+phone_numbers = body['data']
 
 #fcm
 headers = {
         'Content-Type': 'application/json',
         'Authorization': 'key=AAAAa_ji2rI:APA91bFwwWcFsZaupSeZyZghKbN32x3Vp9QlKtHOpHfjY0Bo9Q1XeQTp_oN_c9NnUzsf3F3OpJ7oXsqsKQNbVBm4HXnwKwElhHPk2lBQ4h-Vjy_TljfCo1NKBZxukLGDeXPvHNt3JCks'
       }
+headerwa = {
+    'content-type': "application/json",
+    'token': "e634a1b525f85a007a6c49de61ccce530407c81c1f0b0f461789643ad00d33cede84ced7219c9354"
+}
+
+def convert_zero_to_plus_62(phone_number):
+    if phone_number[0] == '0':
+        string = phone_number[:0] + "+62" + phone_number[0+1:]
+        new_phone_number = string
+        return new_phone_number
+    return phone_number
 
 
 
@@ -50,10 +66,10 @@ while True:
        
         ults1 = 38 - ultra1
         ults2 = 38 - ultra2
-        #print(ults1);
+        print(ults1);
         print(ults2);
-        print('debit tumpah' , ults1);
-        print('sungai' ,  ults2);
+        #print('debit tumpah' , ults1);
+        #print('sungai' ,  ults2);
         
         fults1 = '{:.3}'.format(ults1)
         fults2 = '{:.3}'.format(ults2)
@@ -99,6 +115,11 @@ while True:
             notif = {'isi_notif' : notif_isi}
             inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
             print("berhasil post notif")
+            for i in range(len(phone_numbers)):
+                phone = convert_zero_to_plus_62(phone_numbers[i]['no_hp'])
+
+                payload = "{\"phone\":\""+phone+"\",\"message\":\""+pesan+"\"}"
+                res = requests.post(url = url, data=payload, headers=headerwa)
 #             #print('post twitter debit')
             
         if (ults2 > 26):
@@ -125,6 +146,11 @@ while True:
             print("berhasil post notif")
             
             print ('post twitter sungai')
+            for i in range(len(phone_numbers)):
+                phone = convert_zero_to_plus_62(phone_numbers[i]['no_hp'])
+
+                payload = "{\"phone\":\""+phone+"\",\"message\":\""+pesan+"\"}"
+                res = requests.post(url = url, data=payload, headers=headerwa)
 #         
 #         
 #             
@@ -142,13 +168,13 @@ while True:
         if (ults1 > 25):
             #print ("Banjir Kiriman Buka")
             srv.ServoUp()
-        elif (ults2 <= 25 ):
+        elif (ults2 <= 21 ):
             #print ("Pintu Buka Terus")
             srv.ServoUp()
-        elif (ults2 >= 25):
+        elif (ults2 >= 20):
             #print ("Tutup Pintu")
             srv.ServoDown()
-            
+#             
         
 
     except Exception as e:
