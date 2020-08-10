@@ -74,8 +74,8 @@ while True:
         fults1 = '{:.3}'.format(ults1)
         fults2 = '{:.3}'.format(ults2)
         
-#         fultss1 = '{:.2}'.format(ults1)
-#         fultss2 = '{:.2}'.format(ults2)
+        fultss1 = '{:.2}'.format(ults1)
+        fultss2 = '{:.2}'.format(ults2)
         
         stul1 =  status.fstatus(ults1,16,30)
         stul2 =  status.fstatus(ults2,13,25)
@@ -96,10 +96,10 @@ while True:
         api = tweepy.API(auth)
         
         if (ults1 > 35 and ults2 > 26):
-            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fults1)+" cm, dan sungai sudah mencapai " +str(fults2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
+            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
             api.update_status(pesan)
             
-            notif_isi = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fults1)+" cm, dan sungai sudah mencapai " +str(fults2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
+            notif_isi = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
             
             body = {
                 'notification': {
@@ -126,11 +126,11 @@ while True:
 #             #print('post twitter debit')
             
         elif (ults2 > 26):
-            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
+            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
             api.update_status(pesan)
             
             
-            notif_isi = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fults2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
+            notif_isi = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
             
             body = {
                 'notification': {
