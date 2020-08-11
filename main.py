@@ -27,15 +27,13 @@ db = firebase.database()
 auth = tweepy.OAuthHandler("8ZttJWOCRWYFc98DDBtK2K1xA", "f3z8UiSpqRklN2BkXubOd5yg6qZqZXC0zRugRALb8IWXEMpMrq")
 auth.set_access_token("1253167579650158593-6c7cZ1o0bfIILvblMwy8rpR38O0UFK", "0fHrd7ILuK5iJWIMApr0NkFi4Rzkn6w7vpnmi27xI4YBz")
 
-saat_ini = datetime.now()
-tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
-jam = saat_ini.strftime('%H:%M')
+
+
 url = "https://api.wassenger.com/v1/messages"
 url_get_phone = "https://ibflood.herokuapp.com/api/nohp"
 response = requests.get(url = url_get_phone)
 body = json.loads(str(response.text))
 phone_numbers = body['data']
-now = timeit.default_timer()
 
 # 
 # #fcm
@@ -61,6 +59,10 @@ def convert_zero_to_plus_62(phone_number):
     
 while True:
     try:
+        saat_ini = datetime.now()
+        now = timeit.default_timer()
+        tgl = saat_ini.strftime('%d/%m/%Y') # format dd/mm/YY
+        jam = saat_ini.strftime('%H:%M')
         
         ultra1 = sensor1.ping(5,6)
         ultra2 = sensor2.ping(23,24)
@@ -93,22 +95,12 @@ while True:
        # Create API object
         api = tweepy.API(auth)
         
-        if (ults1 > 35 and ults2 > 26):
-            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
-            #api.update_status(pesan)
-            
-            notif_isi = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
-            
-            if             
-#             for i in range(len(phone_numbers)):
-#                 phone = convert_zero_to_plus_62(phone_numbers[i]['no_hp'])
-# 
-#                 payload = "{\"phone\":\""+phone+"\",\"message\":\""+pesan+"\"}"
-#                 res = requests.post(url = url, data=payload, headers=headerwa)
-#             #print('post twitter debit')
-            time.sleep(1)
+        if (ults1 > 35 and ults2 > 26):            
             if int(now - start) % 60 == 0:
+                pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
+                notif_isi = "Ketinggian sekarang pada Debit Tumpah sudah mencapai "+str(fultss1)+" cm, dan sungai sudah mencapai " +str(fultss2) +" cm. Bahaya akan ada banjir datang, Harap untuk para warga menyelamatkan diri. #simulasibanjir #tugasakhir."
                 api.update_status(pesan)
+                print("berhasil post twitter banjir")
                 body = {
                     'notification': {
                     'title': 'Bahaya akan ada datang nya banjir.',
@@ -126,18 +118,13 @@ while True:
                 notif = {'isi_notif' : notif_isi}
                 inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
                 print("berhasil post notif")
-                print("berhasil post twitter")
+                time.sleep(1)
         elif (ults2 > 26):
-            pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."            
-            notif_isi = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
-            #print ('post twitter sungai')
-#             for i in range(len(phone_numbers)):
-#                 phone = convert_zero_to_plus_62(phone_numbers[i]['no_hp'])
-# 
-#                 payload = "{\"phone\":\""+phone+"\",\"message\":\""+pesan+"\"}"
-#                 res = requests.post(url = url, data=payload, headers=headerwa)
             if int(now - start) % 60 == 0:
+                pesan = "Pada tanggal "+str(tgl)+" , jam "+str(jam)+" . Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."            
+                notif_isi = "Ketinggian sekarang pada Sungai sudah mencapai "+str(fultss2)+" cm . Waspada air sungai akan meluber. Harap bersiap yang rumah nya pinggiran sungai untuk menyelamatkan diri."
                 api.update_status(pesan)
+                print("berhasil post twitter sungai meluap")
                 body = {
                     'notification': {
                     'title': 'Kondisi air Sungai akan meluap ke dataran tepi sungai.',
@@ -155,11 +142,8 @@ while True:
                 notif = {'isi_notif' : notif_isi}
                 inreport = requests.post('https://ibflood.herokuapp.com/api/notif/create', json=report)
                 print("berhasil post notif")
-            
-                print("berhasil post twitter")
+                time.sleep(1)
 
-
-             
         time.sleep(1)
         #now = timeit.default_timer()
         if int(now - start) % 60 == 0:
